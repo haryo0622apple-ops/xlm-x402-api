@@ -8,15 +8,26 @@ app.get("/", (req,res)=>{
  res.send("XLM x402 API running");
 });
 
-app.get("/api/xlm-price",(req,res)=>{
+app.get("/api/xlm-price", async (req,res)=>{
 
- const paid = req.headers["x402-payment"];
+ const tx = req.headers["x402-tx"];
 
- if(!paid){
+ if(!tx){
   res.status(402).json({
    message:"Payment required",
    price:"0.01 XLM",
    pay_to: WALLET
+  });
+  return;
+ }
+
+ const check = await fetch(
+  "https://horizon.stellar.org/transactions/" + tx
+ );
+
+ if(!check.ok){
+  res.status(402).json({
+   message:"Transaction not found"
   });
   return;
  }
