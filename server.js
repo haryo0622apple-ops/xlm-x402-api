@@ -2,6 +2,8 @@ import express from "express";
 
 const app = express();
 
+const WALLET = "GAHGNVFOS4LV7ZQS27JHP2D57TUOZ6OBCL5WUL6VXESOMXGLERSWSWBG";
+
 app.get("/", (req,res)=>{
  res.send("XLM x402 API running");
 });
@@ -13,7 +15,8 @@ app.get("/api/xlm-price",(req,res)=>{
  if(!paid){
   res.status(402).json({
    message:"Payment required",
-   price:"0.01 XLM"
+   price:"0.01 XLM",
+   pay_to: WALLET
   });
   return;
  }
