@@ -5,36 +5,33 @@ const app = express();
 const WALLET = "GAHGNVFOS4LV7ZQS27JHP2D57TUOZ6OBCL5WUL6VXESOMXGLERSWSWBG";
 
 app.get("/", (req,res)=>{
- res.send("XLM x402 API running");
+ res.send("XLM Signal API running");
 });
 
-app.get("/api/xlm-price", async (req,res)=>{
+app.get("/api/xlm-signal", async (req,res)=>{
 
- const tx = req.headers["x402-tx"];
-
- if(!tx){
-  res.status(402).json({
-   message:"Payment required",
-   price:"0.01 XLM",
-   pay_to: WALLET
-  });
-  return;
- }
-
- const check = await fetch(
-  "https://horizon.stellar.org/transactions/" + tx
+ const data = await fetch(
+  "https://api.coingecko.com/api/v3/simple/price?ids=stellar&vs_currencies=usd"
  );
 
- if(!check.ok){
-  res.status(402).json({
-   message:"Transaction not found"
-  });
-  return;
+ const json = await data.json();
+
+ const price = json.stellar.usd;
+
+ let signal = "HOLD";
+
+ if(price < 0.09){
+  signal = "BUY";
+ }
+
+ if(price > 0.20){
+  signal = "SELL";
  }
 
  res.json({
   coin:"XLM",
-  price:"0.12"
+  price,
+  signal
  });
 
 });
