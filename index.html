@@ -1,1 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>XLM AI分析</title>
 
+<style>
+
+body{
+ font-family:sans-serif;
+ background:#0f172a;
+ color:white;
+ text-align:center;
+ padding:40px;
+}
+
+.card{
+ background:#1e293b;
+ padding:30px;
+ border-radius:15px;
+ max-width:400px;
+ margin:auto;
+}
+
+h1{
+ font-size:28px;
+}
+
+.data{
+ font-size:22px;
+ margin:15px 0;
+}
+
+.buy{color:#22c55e}
+.sell{color:#ef4444}
+.hold{color:#facc15}
+
+</style>
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>XLM AI分析</h1>
+
+<div class="data">価格: <span id="price">取得中...</span></div>
+
+<div class="data">トレンド: <span id="trend"></span></div>
+
+<div class="data">RSI: <span id="rsi"></span></div>
+
+<div class="data">ROI: <span id="roi"></span></div>
+
+<div class="data">判断: <span id="signal"></span></div>
+
+</div>
+
+<script>
+
+fetch("https://xlm-x402-api-production.up.railway.app/api/xlm-signal")
+
+.then(res=>res.json())
+
+.then(data=>{
+
+document.getElementById("price").innerText="$"+data.price
+
+document.getElementById("trend").innerText=data.trend
+
+document.getElementById("rsi").innerText=data.rsi
+
+document.getElementById("roi").innerText=data.roi
+
+const signal=document.getElementById("signal")
+
+signal.innerText=data.signal
+
+if(data.signal==="BUY") signal.className="buy"
+
+if(data.signal==="SELL") signal.className="sell"
+
+if(data.signal==="HOLD") signal.className="hold"
+
+})
+
+</script>
+
+</body>
+</html>
